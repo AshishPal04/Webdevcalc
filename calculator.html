@@ -1,0 +1,384 @@
+<!-- Ashish Pal Calculator -->
+
+<html>
+
+<head>
+    <title class="title">Calculator</title>
+    <style>
+
+        .whole {
+            background-color: rgb(35, 32, 32);
+            width: 787px;
+            border-radius: 30px;
+            margin-left: 10%;
+            padding: 5px;
+        }
+
+        .button {
+            width: 160px;
+            height: 80px;
+            background-color: #e28743;
+            border: 0px;
+            color: #ffffffca;
+            font-weight: bold;
+            border-radius: 6px;
+            box-shadow: 3px 5px 5px black;
+            font-size: 25px;
+        }
+
+        button:hover {
+            background-color: #98c1d9;
+        }
+
+        button:active {
+            box-shadow: 2px 4px 4px black;
+            color:aquamarine;
+        }
+
+        .gap {
+            padding-top: 20px;
+        }
+
+        .flexContainer {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            align-items: baseline;
+            width: 780px;
+            row-gap: 8px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            border: 20px;
+            border: 3px solid black; 
+            background-color: rgb(149, 145, 145);
+            border-radius: 30px;
+        }
+
+        .displayContainer {
+            display: flex;
+            justify-content: flex-end;
+            row-gap: 10px;
+            width: 780px;
+            background-color: rgb(149, 145, 145);
+            color: #ffffffca;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-radius: 30px;
+            border: 3px solid black; 
+            font-size: 25px;
+        }
+
+        .top {
+            color:#278556;
+        }
+
+        .middle {
+            color:#4B0082;
+        }
+        
+        .bottom {
+            color:#005F56;
+        }
+
+        .bottomer {
+            color:#001F3F;
+        }
+
+        .absbottom {
+            color:#004080;
+        }
+
+        #display {
+            margin-right: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Calculator</h1>
+    <div class="whole">
+    <div class="displayContainer">
+        <span id="display">0</span>
+    </div>
+    <div class="gap"></div>
+    <div class="flexContainer">
+        <button class="button number top">7</button>
+        <button class="button number top">8</button>
+        <button class="button number top">9</button>
+        <button class="button operator top">/</button>
+
+
+        <button class="button number middle">4</button>
+        <button class="button number middle">5</button>
+        <button class="button number middle">6</button>
+        <button class="button operator middle">*</button>
+
+
+        <button class="button number bottom">1</button>
+        <button class="button number bottom">2</button>
+        <button class="button number bottom">3</button>
+        <button class="button operator bottom">-</button>
+
+
+        <button class="button number bottomer">0</button> <!--adding a space defines two classes-->
+        <button class="button decimal bottomer">.</button>
+        <button class="button equals bottomer">=</button>
+        <button class="button operator bottomer">+</button>
+
+
+        <button class="button parenthesis absbottom">(</button>
+        <button class="button parenthesis absbottom">)</button>
+    </div>
+</div>
+
+    <script>
+        //remember with let and const, if you already said let a = something and then const a = something, error and using const twice would error
+
+        const numbersArr = Array.from(document.getElementsByClassName("number"));
+        const operatorsArr = Array.from(document.getElementsByClassName("operator"));
+        const parenthesisArr = Array.from(document.getElementsByClassName("parenthesis"));
+        const numberStrs = "0123456789".split("");
+
+        const data = { //creating an object
+            displayString: "0",
+            appendStringNum: (newChar) => {
+                if (newChar === ".") {
+                    //decimal + 0?
+                }
+                if (newChar in numberStrs) { //if newChar is a number 0-9
+                    if (data.displayString === "0") {
+                        data.displayString = "";
+                    }
+                    data.displayString += newChar;
+                }
+                data.updateDisplay();
+            },
+
+            appendStringOperator: (newChar) => {
+                if (numberStrs.includes(data.displayString.slice(-1)) || data.displayString.slice(-1) === ")") {
+                    data.displayString += newChar;
+                }
+                data.updateDisplay();
+            },
+
+
+            appendStringParenthesis: (newChar) => {
+                if (newChar === ")") {
+                    if (data.displayString.split("(").length <= data.displayString.split(")").length) {
+                        //if there are not enough open parenthesis to add a closing parenthesis terminate early
+                        return;
+                    }
+                    if (operatorsArr.map((operator) => operator.innerText).includes(data.displayString[data.displayString.length - 1])) {
+                        //early termination for adding parenthesis after operator
+                        return;
+                    }
+                }
+                if (data.displayString === "0") {
+                    data.displayString = "";
+                    data.displayString += newChar;
+                    return;
+                }
+
+                data.displayString += newChar;
+
+                data.updateDisplay();
+            },
+
+
+            updateDisplay: () => {
+                const display = document.getElementById("display");
+                display.innerText = data.displayString;
+            },
+        };
+
+        const display = document.getElementById("display");
+        display.innerText = data.displayString;
+
+        //Array.from converts the HTML collection into a standard javascript Array.
+
+        //for loop: iterate over the items in your array and you can access them in a number of ways
+
+        // for(let i = 0; i < buttonsArr.length; i++) {
+        //     console.log(buttonsArr[i].innerText);
+        // }
+
+        //Another way to loop through java
+        // for (let elem of buttonsArr) {
+        //     console.log(elem);
+        // }
+
+        // //class myClass {
+        //     constructor() {}
+        //     c() {
+        //         console.log(this);
+        //     }
+        // } this is how you create a class and then a function c inside java
+
+
+        //The map function accesses each element of the array like a for loop. Allows to create a shallow copy of your array
+
+
+        numbersArr.map((elem, i) => {
+            elem.addEventListener("click", (evt) => {
+                data.appendStringNum(elem.innerText);
+            }); //this waits until an event happens and does a function when it does
+        });
+
+        operatorsArr.map((elem, i) => {
+            elem.addEventListener("click", (evt) => {
+                data.appendStringOperator(elem.innerText);
+            }); //this waits until an event happens and does a function when it does
+        });
+
+        //shallow copy vs deep copy. arrow functions are anonymous functions, so there is no way to reference it unless you reference it. this keyword
+
+        parenthesisArr.map((elem, i) => {
+            elem.addEventListener("click", (evt) => {
+                data.appendStringParenthesis(elem.innerText);
+            }); //this waits until an event happens and does a function when it does
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //equal sign stuff
+        class Node { //Node class to make expression tree
+            constructor(val = null, left = null, right = null) {
+                this.val = val;
+                this.left = left;
+                this.right = right;
+            }
+        }
+
+        function convertArray(displayString) { //function to convert the display string into an array
+            let expression = []; //empty array
+            let num = ""; //empty string
+
+            for (let i=0;i<displayString.length;i++) { //looping through the display string
+                if (!isNaN(displayString[i]) || displayString[i] === ".") // if it is a  digit number or is a decimal
+                {
+                    num += displayString[i]; //add it to the string
+                } 
+                else 
+                {
+                    if (num) //if its a complete number
+                    {
+                        expression.push(num); //push it
+                        num = ""; //reset the empty string
+                    }
+                    if (displayString[i] !== " ") //if it is an operator or parentheses
+                    {
+                        expression.push(displayString[i]); //push it
+                    }
+                }
+            }
+            if (num) 
+            {
+                expression.push(num); // push last number
+            }
+
+            return expression;
+        }
+
+        function solveInorder(expression) //solving the array of numbers and operators
+        {
+            function helper(start, end) //helper to look through the entire array and solving the expressions inside
+            {
+                let rootOperator = 99999; //keep track of the lowest importance operator in the range
+                let operatorIndex = -1; //index of the root operator
+                let validParentheses = 0; //check of valid parentheses
+
+                for (let i = start; i <= end; i++) //loop through the array
+                { 
+                    if (expression[i] === "(") //checking open parentheses
+                    {
+                        validParentheses++; //increment the count
+                    }
+
+                    if (expression[i] === ")") //checking closed parentheses
+                    {
+                        validParentheses--; //decrement the count
+                    }
+
+                    if ((validParentheses === 0) && ("+-*/".includes(expression[i]))) // check if we are not in a parentheses. Also check if there are operators in the expression
+                    {
+                        let importance; //initialize importance
+                        if (expression[i] === "+" || expression[i] === "-") //if it is + or - operation, then lowest importance PEMDAS
+                        {
+                            importance = 1;
+                        }
+                        else //if operation is * or / then highest importance
+                        {
+                            importance = 2;
+                        }
+                        if (importance <= rootOperator) //check of the importance of the root operator which should be bottom
+                        {
+                            rootOperator = importance; //if it is the root operator, then update
+                            operatorIndex = i;
+                        }
+                    }
+                }
+
+                if (operatorIndex === -1) //if there is no operator in the expression
+                {
+                    if ((expression[start] === "(") && (expression[end] === ")"))  //means it can be in parentheses
+                    {
+                        return helper(start + 1, end - 1); //callback without the parentheses
+                    }
+                    return parseFloat(expression[start]); // or its just a single number which can be returned
+                } 
+
+                let left = helper(start, operatorIndex - 1); //store left number of the operator
+                let right = helper(operatorIndex + 1, end); //solve right number of the operator
+                let operator = expression[operatorIndex]; //store the type of operator it is
+
+                if (operator === "+") //solving the expression below based on operation
+                {
+                    return left + right; //add
+                }
+                else if (operator === "-")
+                {
+                    return left - right; //subtract
+                }
+                else if (operator === "*")
+                {
+                    return left * right; //multiply
+                }
+                else 
+                {
+                    return left / right; //divide
+                }
+            }
+
+            return helper(0, expression.length - 1); //recurrsive callback to solve next expression
+        }
+
+        document.querySelector(".equals").addEventListener("click", () => { //event someone clicks equals
+            let expression = convertArray(data.displayString); //convert the display string into an array
+            let result = solveInorder(expression); //solve the expression
+            data.displayString = result.toString(); //convert it to a string and make it the display string
+            data.updateDisplay(); //update the display to show answer
+        });
+
+
+    </script>
+</body>
+
+</html>
